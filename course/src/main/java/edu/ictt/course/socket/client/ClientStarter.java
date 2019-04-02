@@ -80,7 +80,7 @@ public class ClientStarter {
      * 通过数据库获取其他服务器信息
      * 隔5分钟去获取一次
      */
-    //@Scheduled(fixedRate = 300000)
+    @Scheduled(fixedRate = 300000)
     public void fetchOtherServer() {
         String localIp = CommonUtil.getLocalIp();
         logger.info("本机IP：{}",localIp);

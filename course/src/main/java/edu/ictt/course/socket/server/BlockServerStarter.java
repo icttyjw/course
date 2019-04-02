@@ -25,7 +25,7 @@ import javax.annotation.PostConstruct;
 public class BlockServerStarter {
 
 	private Logger logger = LoggerFactory.getLogger(getClass());
-    @PostConstruct
+    //@PostConstruct
     public void serverStart() throws IOException {
     	logger.info("启动server");
         ServerAioHandler serverAioHandler = new BlockServerAioHandler();

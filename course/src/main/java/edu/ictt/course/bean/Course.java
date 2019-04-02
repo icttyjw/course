@@ -33,6 +33,16 @@ public class Course implements Serializable{
     //课程属性:必修学位，必修非学位等等
     private String coursePro;
 
+    public Course(int courseId,int schoolId,int facultyId,int teacherId, String courseName, int courseCredit, String courseDate, String coursePro){
+        this.courseId = courseId;
+        this.schoolId=schoolId;
+        this.facultyId=facultyId;
+        this.teacherId=teacherId;
+        this.courseName = courseName;
+        this.courseCredit = courseCredit;
+        this.courseDate = courseDate;
+        this.coursePro = coursePro;
+    }
 	public int getCourseId() {
 		return courseId;
 	}
