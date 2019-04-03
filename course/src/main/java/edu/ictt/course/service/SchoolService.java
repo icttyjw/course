@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import edu.ictt.course.bean.School;
 import edu.ictt.course.bean.SchoolInfo;
 import edu.ictt.course.repository.SchoolRepository;
 
@@ -13,10 +14,10 @@ public class SchoolService {
 	@Resource
 	private SchoolRepository schoolRepository;
 	
-	public SchoolInfo findById(int id){
+	public School findById(int id){
 		return schoolRepository.findOne(id);
 	}
-	public void save(SchoolInfo schoolInfo){
-		schoolRepository.save(schoolInfo);
+	public void save(School school){
+		schoolRepository.save(school);
 	}
 }

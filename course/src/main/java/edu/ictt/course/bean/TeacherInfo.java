@@ -13,8 +13,6 @@ import edu.ictt.course.common.PairKey;
 /**
  * 授课老师信息
  */
-@Entity
-@Table
 public class TeacherInfo implements Serializable{
 
 	
@@ -24,7 +22,6 @@ public class TeacherInfo implements Serializable{
 	private static final long serialVersionUID = 9190493137357825337L;
 
 	//任课教师工号
-	@Id
     private int teacherId;
 
     //任课教师姓名
@@ -34,17 +31,22 @@ public class TeacherInfo implements Serializable{
     private String teacherTitle;
 
     //任课教师密钥对
-    private PairKey teacherPairKey;
+    private String pubKey;
 
     public TeacherInfo(){}
 
-    public TeacherInfo(int teacherId, String teacherName, String teacherTitle, PairKey teacherPairKey){
+    public TeacherInfo(int teacherId, String teacherName, String teacherTitle, String pubKey){
         this.teacherId = teacherId;
         this.teacherName = teacherName;
         this.teacherTitle = teacherTitle;
-        this.teacherPairKey = teacherPairKey;
+        this.pubKey = pubKey;
     }
-    
+    public TeacherInfo(Teacher teacher){
+    	this.teacherId=teacher.getTeacherId();
+    	this.teacherName=teacher.getTeacherName();
+    	this.teacherTitle=teacher.getTeacherTitle();
+    	this.pubKey=teacher.getPubKey();
+    }
    
 
 	public int getTeacherId() {
@@ -63,8 +65,8 @@ public class TeacherInfo implements Serializable{
         return teacherTitle;
     }
 
-    public PairKey getTeacherPairKey() {
-        return teacherPairKey;
+    public String getPubKey() {
+        return pubKey;
     }
 
     public void setTeacherId(int teacherId) {
@@ -79,8 +81,8 @@ public class TeacherInfo implements Serializable{
         this.teacherTitle = teacherTitle;
     }
 
-    public void setTeacherPairKey(PairKey teacherPairKey) {
-        this.teacherPairKey = teacherPairKey;
+    public void setPubKey(String pubKey) {
+        this.pubKey = pubKey;
     }
 
 
@@ -90,7 +92,7 @@ public class TeacherInfo implements Serializable{
                 "teacherId=" + teacherId +
                 ", teacherName='" + teacherName + '\'' +
                 ", teacherTitle='" + teacherTitle + '\'' +
-                ", teacherPairKey=" + teacherPairKey +
+                ", pubKey=" + pubKey +
                 '}';
     }
 }

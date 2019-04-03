@@ -2,10 +2,13 @@ package edu.ictt.course;
 
 import edu.ictt.course.App;
 import edu.ictt.course.bean.Course;
+import edu.ictt.course.bean.Faculty;
 import edu.ictt.course.bean.FacultyInfo;
 import edu.ictt.course.bean.ImportInfo;
+import edu.ictt.course.bean.School;
 import edu.ictt.course.bean.SchoolInfo;
 import edu.ictt.course.bean.StudentInfo;
+import edu.ictt.course.bean.Teacher;
 import edu.ictt.course.bean.TeacherInfo;
 import edu.ictt.course.common.PairKey;
 import edu.ictt.course.core.excel.ExcelListener;
@@ -56,14 +59,18 @@ public class ExcelTest {
 	}
 	@Test
 	public void savefirst(){
-		SchoolInfo schoolInfo=new SchoolInfo(1, "", new PairKey(), "");
-		FacultyInfo facultyInfo=new FacultyInfo(1, "", "", new PairKey());
-		TeacherInfo teacherInfo=new TeacherInfo(1, "", "", new PairKey());
+		System.out.println(1);
+		PairKey skey=new PairKey();
+		PairKey fkey=new PairKey();
+		PairKey tkey=new PairKey();
+		School school=new School(1, "", "",skey.getPublicKey(), skey.getPrivateKey());
+		Faculty faculty=new Faculty(1, "", "", fkey.getPublicKey(),fkey.getPrivateKey());
+		Teacher teacher=new Teacher(1, "", "", tkey.getPublicKey(),tkey.getPrivateKey());
 		Course course=new Course(1, 1, 1, 1, "", 100, "", "");
 		StudentInfo studentInfo=new StudentInfo(1, "", "");
-		schoolService.save(schoolInfo);
-		facultyService.save(facultyInfo);
-		teacherService.save(teacherInfo);
+		schoolService.save(school);
+		facultyService.save(faculty);
+		teacherService.save(teacher);
 		courseService.save(course);
 		studentService.save(studentInfo);
 	}

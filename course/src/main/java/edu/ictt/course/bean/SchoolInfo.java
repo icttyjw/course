@@ -16,8 +16,6 @@ import edu.ictt.course.common.PairKey;
  * 记录中学校信息类
  */
 
-@Entity
-@Table
 public class SchoolInfo implements Serializable{
 
 	
@@ -28,14 +26,13 @@ public class SchoolInfo implements Serializable{
 	private static final long serialVersionUID = -2082365746841370197L;
 
 	//学校编号
-	@Id
     private int schoolId;
 
     //学校名
     private String schoolName;
 
     //学校密钥对
-    private PairKey schoolPairKey;
+    private String pubKey;
 
     //学校特殊属性:比如一本，二本那些，这个属性可能包含多个内容
     //private List<String> schoolPro = new ArrayList<>();
@@ -50,13 +47,19 @@ public class SchoolInfo implements Serializable{
         this.schoolPro = schoolPro;
     }*/
     
-    public SchoolInfo(int schoolId, String schoolName, PairKey schoolPairKey, String schoolPro){
+    public SchoolInfo(int schoolId, String schoolName, String pubKey, String schoolPro){
         this.schoolId = schoolId;
         this.schoolName = schoolName;
-        this.schoolPairKey = schoolPairKey;
+        this.pubKey = pubKey;
         this.schoolPro = schoolPro;
     }
     
+    public SchoolInfo(School school){
+    	this.schoolId=school.getSchoolId();
+    	this.schoolName=school.getSchoolName();
+    	this.schoolPro=school.getSchoolPro();
+    	this.pubKey=school.getPubKey();
+    }
    
 
 	public String getSchoolPro() {
@@ -78,8 +81,8 @@ public class SchoolInfo implements Serializable{
         return schoolName;
     }
 
-    public PairKey getSchoolPairKey() {
-        return schoolPairKey;
+    public String getPubKey() {
+        return pubKey;
     }
     /*
     public List<String> getSchoolPro() {
@@ -104,8 +107,8 @@ public class SchoolInfo implements Serializable{
         this.schoolName = schoolName;
     }
 
-    public void setSchoolPairKey(PairKey schoolPairKey) {
-        this.schoolPairKey = schoolPairKey;
+    public void setPubKey(String pubKey) {
+        this.pubKey = pubKey;
     }
 
    
@@ -115,7 +118,7 @@ public class SchoolInfo implements Serializable{
         return "SchoolInfo{" +
                 "schoolId=" + schoolId +
                 ", schoolName='" + schoolName + '\'' +
-                ", schoolPairKey=" + schoolPairKey +
+                ", pubKey=" + pubKey +
                 ", schoolPro=" + schoolPro +
                 '}';
     }

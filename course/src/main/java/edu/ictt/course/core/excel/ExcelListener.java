@@ -15,10 +15,13 @@ import com.alibaba.excel.read.event.AnalysisEventListener;
 import edu.ictt.course.ApplicationContextProvider;
 import edu.ictt.course.bean.Course;
 import edu.ictt.course.bean.CourseInfo;
+import edu.ictt.course.bean.Faculty;
 import edu.ictt.course.bean.FacultyInfo;
 import edu.ictt.course.bean.ImportInfo;
+import edu.ictt.course.bean.School;
 import edu.ictt.course.bean.SchoolInfo;
 import edu.ictt.course.bean.StudentInfo;
+import edu.ictt.course.bean.Teacher;
 import edu.ictt.course.bean.TeacherInfo;
 import edu.ictt.course.block.record.GradeInfo;
 import edu.ictt.course.block.record.GradeRecord;
@@ -94,16 +97,20 @@ public class ExcelListener extends AnalysisEventListener {
     	List<Object> cs=objectcollect.get(1);
     	Course course=courseService.findById(1);
     	CourseInfo courseInfo=new CourseInfo(course);
-    	SchoolInfo school=schoolService.findById(course.getSchoolId());
-    	FacultyInfo faculty=facultyService.findById(course.getFacultyId());
-    	TeacherInfo teacher=teacherService.findById(course.getTeacherId());
+    	School school=schoolService.findById(course.getSchoolId());
+    	Faculty faculty=facultyService.findById(course.getFacultyId());
+    	Teacher teacher=teacherService.findById(course.getTeacherId());
+    	SchoolInfo sinfo=new SchoolInfo(school);
+    	FacultyInfo finfo=new FacultyInfo(faculty);
     	TeacherInfo[] tl=new TeacherInfo[3];
-    	tl[0]=teacher;
-    	
-    	PairKey tpairkey=teacher.getTeacherPairKey();
-    	PairKey fpairkey=faculty.getFacultyPairKey();
-    	String sc=FastJsonUtil.toJSONString(school);
-    	String fa=FastJsonUtil.toJSONString(faculty);
+    	TeacherInfo tinfo=new TeacherInfo(teacher);
+    	tl[0]=tinfo;
+    	String teaprikey=teacher.getPriKey();
+    	//String teapubkey=teacher.getPubKey();
+    	String facprikey=faculty.getPriKey();
+    	//String facpubkey=faculty.getPubKey();
+    	String sc=FastJsonUtil.toJSONString(sinfo);
+    	String fa=FastJsonUtil.toJSONString(finfo);
     	String courshash=SHA256.sha256(school.getSchoolName()+faculty.getFacultyName()+teacher.getTeacherName()+course.getCourseName());
     	for(Object o:cs){
     		/*
@@ -113,14 +120,14 @@ public class ExcelListener extends AnalysisEventListener {
     		StudentInfo str=studentService.queryStuById(ii.getStuid());
     		GradeInfo gi=new GradeInfo(courseInfo, tl, str, ii.getScore());
     		String gr=FastJsonUtil.toJSONString(gi);
-    		GradeRecord r=new GradeRecord(school, faculty, gi, null, null, System.currentTimeMillis());
+    		GradeRecord r=new GradeRecord(sinfo, finfo, gi, null, null, System.currentTimeMillis());
     		try{
     			String strsign=sc+fa+gi+r.getRecordTimeStamp();
-    			String tsign=ECDSAAlgorithm.sign(tpairkey.getPrivateKey(), strsign);
+    			String tsign=ECDSAAlgorithm.sign(teaprikey, strsign);
     			r.setTeacherSign(tsign);
     			
     			strsign=sc+fa+gi+r.getRecordTimeStamp()+tsign;
-    			String fsign=ECDSAAlgorithm.sign(fpairkey.getPrivateKey(), strsign);
+    			String fsign=ECDSAAlgorithm.sign(facprikey, strsign);
     			r.setFalSign(fsign);
     			ApplicationContextProvider.publishEvent(new SendRecordEvent(new RecordBody(r, courshash, count)));
     		}catch(UnsupportedEncodingException e){

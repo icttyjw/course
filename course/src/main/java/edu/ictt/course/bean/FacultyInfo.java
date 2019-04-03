@@ -12,12 +12,9 @@ import edu.ictt.course.common.PairKey;
  * @Date:
  *
  */
-@Entity
-@Table
 public class FacultyInfo {
 
     //学院id
-	@Id
     private  int facultyId;
 
     //学院名称
@@ -27,15 +24,22 @@ public class FacultyInfo {
     private String facultyPro;
 
     //学院密钥对
-    private PairKey facultyPairKey;
+    private String pubKey;
 
     public FacultyInfo(){}
 
-    public FacultyInfo(int facultyId, String facultyName, String facultyPro,PairKey facultyPairKey){
+    public FacultyInfo(int facultyId, String facultyName, String facultyPro,String pubKey){
         this.facultyId = facultyId;
         this.facultyName = facultyName;
         this.facultyPro = facultyPro;
-        this.facultyPairKey = facultyPairKey;
+        this.pubKey = pubKey;
+    }
+    
+    public FacultyInfo(Faculty faculty){
+    	this.facultyId=faculty.getFacultyId();
+    	this.facultyName=faculty.getFacultyName();
+    	this.facultyPro=faculty.getFacultyPro();
+    	this.pubKey=faculty.getPubKey();
     }
 
     public int getFacultyId() {
@@ -68,12 +72,12 @@ public class FacultyInfo {
         this.facultyPro = facultyPro;
     }
 
-    public PairKey getFacultyPairKey() {
-        return facultyPairKey;
+    public String getPubKey() {
+        return pubKey;
     }
 
-    public void setFacultyPairKey(PairKey facultyPairKey) {
-        this.facultyPairKey = facultyPairKey;
+    public void setPubKey(String pubKey) {
+        this.pubKey = pubKey;
     }
 
     @Override
@@ -82,7 +86,7 @@ public class FacultyInfo {
                 "facultyId=" + facultyId +
                 ", facultyName='" + facultyName + '\'' +
                 ", facultyPro='" + facultyPro + '\'' +
-                ", facultyPairKey=" + facultyPairKey +
+                ", pubKey=" + pubKey +
                 '}';
     }
 }

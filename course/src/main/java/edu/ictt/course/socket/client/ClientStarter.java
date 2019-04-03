@@ -51,8 +51,8 @@ public class ClientStarter {
     private ClientGroupContext clientGroupContext;
     @Resource
     private PacketSender packetSender;
-    @Resource
-    private RestTemplate restTemplate;
+    //@Resource
+    //private RestTemplate restTemplate;
     //@Resource
     //private NodeService nodeService;
   //  @Resource
