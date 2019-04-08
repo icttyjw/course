@@ -53,11 +53,11 @@ public class ExcelTest {
 	
 	@Test
 	public void read() throws FileNotFoundException{
-		 InputStream inputStream = new FileInputStream(new File("recordf.xlsx"));
+		 InputStream inputStream = new FileInputStream(new File("test.xlsx"));
 		 ExcelReader excelReader=new ExcelReader(inputStream, ExcelTypeEnum.XLSX, null, excelListener);
 		 excelReader.read(new Sheet(1,1,ImportInfo.class));
 	}
-	@Test
+	/*
 	public void savefirst(){
 		System.out.println(1);
 		PairKey skey=new PairKey();
@@ -73,5 +73,5 @@ public class ExcelTest {
 		teacherService.save(teacher);
 		courseService.save(course);
 		studentService.save(studentInfo);
-	}
+	}*/
 }

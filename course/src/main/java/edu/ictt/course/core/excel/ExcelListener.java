@@ -90,11 +90,12 @@ public class ExcelListener extends AnalysisEventListener {
 
     @Override
     public void doAfterAllAnalysed(AnalysisContext context) {
-    	int count = datas.size();
     	/*
     	 * 需要通过上传老师的信息获得相应的课程及学院学校的信息，同时合成hash信息
     	 */
+    	System.out.println("");
     	List<Object> cs=objectcollect.get(1);
+    	int count=cs.size();
     	Course course=courseService.findById(1);
     	CourseInfo courseInfo=new CourseInfo(course);
     	School school=schoolService.findById(course.getSchoolId());
@@ -129,6 +130,8 @@ public class ExcelListener extends AnalysisEventListener {
     			strsign=sc+fa+gi+r.getRecordTimeStamp()+tsign;
     			String fsign=ECDSAAlgorithm.sign(facprikey, strsign);
     			r.setFalSign(fsign);
+    			System.out.println("start event");
+    			
     			ApplicationContextProvider.publishEvent(new SendRecordEvent(new RecordBody(r, courshash, count)));
     		}catch(UnsupportedEncodingException e){
     			e.printStackTrace();

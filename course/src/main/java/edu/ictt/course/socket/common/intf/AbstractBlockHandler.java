@@ -8,6 +8,7 @@ import org.tio.core.ChannelContext;
 import org.tio.utils.json.Json;
 
 import edu.ictt.course.common.Const;
+import edu.ictt.course.common.FastJsonUtil;
 import edu.ictt.course.socket.body.BaseBody;
 import edu.ictt.course.socket.packet.BlockPacket;
 
@@ -30,7 +31,7 @@ public abstract class AbstractBlockHandler<T extends BaseBody> implements Handle
 		T bsBody = null;
 		if (packet.getBody() != null) {
 			jsonStr = new String(packet.getBody(), Const.CHARSET);
-			bsBody = Json.toBean(jsonStr, bodyClass());
+			bsBody = FastJsonUtil.toTBean(jsonStr, bodyClass());
 			logger.info(jsonStr+bsBody.getClass());
 		}
 		return handler(packet, bsBody, channelContext);

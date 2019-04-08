@@ -29,5 +29,10 @@ public class ImportInfo  extends BaseRowModel{
 	public void setScore(double score) {
 		this.score = score;
 	}
-	
+	@Override
+	public String toString(){
+		return "id: "+stuid+
+				"name: "+name+
+				"score: "+score;
+	}
 }

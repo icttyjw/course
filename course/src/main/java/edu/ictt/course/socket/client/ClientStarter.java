@@ -2,6 +2,7 @@ package edu.ictt.course.socket.client;
 
 import static edu.ictt.course.common.Const.GROUP_NAME;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,9 +28,11 @@ import org.tio.core.Node;
 import org.tio.utils.lock.SetWithLock;
 
 import com.google.common.collect.Maps;
+import com.sun.prism.impl.Disposer.Record;
 
 import edu.ictt.course.common.CommonUtil;
 import edu.ictt.course.common.Const;
+import edu.ictt.course.common.FastJsonUtil;
 import edu.ictt.course.core.event.NodesConnectedEvent;
 import edu.ictt.course.core.event.SendRecordEvent;
 import edu.ictt.course.socket.body.RecordBody;
@@ -195,8 +198,17 @@ public class ClientStarter {
     }
     
     @EventListener(SendRecordEvent.class)
-    public void sendRecord(RecordBody recordBody){
-    	BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.HEART_BEAT).setBody(recordBody).build();
+    public void sendRecord(SendRecordEvent sendRecordEvent){
+    	RecordBody recordBody=(RecordBody)sendRecordEvent.getSource();
+    	BlockPacket blockPacket = new PacketBuilder<>().setType(PacketType.RECEIVE_RECORD).setBody(recordBody).build();
+    	try {
+			String rn=new String(blockPacket.getBody(),Const.CHARSET);
+			RecordBody r=FastJsonUtil.toBean(rn, RecordBody.class);
+			System.out.println(r);
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	packetSender.sendGroup(blockPacket);
     }
 
