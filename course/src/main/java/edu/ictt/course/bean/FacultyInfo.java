@@ -24,7 +24,7 @@ public class FacultyInfo {
     private String facultyPro;
 
     //学院密钥对
-    private String pubKey;
+    private String facultyPubKey;
 
     public FacultyInfo(){}
 
@@ -32,14 +32,14 @@ public class FacultyInfo {
         this.facultyId = facultyId;
         this.facultyName = facultyName;
         this.facultyPro = facultyPro;
-        this.pubKey = pubKey;
+        this.facultyPubKey = pubKey;
     }
     
     public FacultyInfo(Faculty faculty){
     	this.facultyId=faculty.getFacultyId();
     	this.facultyName=faculty.getFacultyName();
     	this.facultyPro=faculty.getFacultyPro();
-    	this.pubKey=faculty.getPubKey();
+    	this.facultyPubKey=faculty.getPubKey();
     }
 
     public int getFacultyId() {
@@ -72,21 +72,20 @@ public class FacultyInfo {
         this.facultyPro = facultyPro;
     }
 
-    public String getPubKey() {
-        return pubKey;
-    }
+	public String getFacultyPubKey() {
+		return facultyPubKey;
+	}
 
-    public void setPubKey(String pubKey) {
-        this.pubKey = pubKey;
-    }
+	public void setFacultyPubKey(String facultyPubKey) {
+		this.facultyPubKey = facultyPubKey;
+	}
 
-    @Override
-    public String toString() {
-        return "FacultyInfo{" +
-                "facultyId=" + facultyId +
-                ", facultyName='" + facultyName + '\'' +
-                ", facultyPro='" + facultyPro + '\'' +
-                ", pubKey=" + pubKey +
-                '}';
-    }
+	@Override
+	public String toString() {
+		return "FacultyInfo [facultyId=" + facultyId + ", facultyName=" + facultyName + ", facultyPro=" + facultyPro
+				+ ", facultyPubKey=" + facultyPubKey + "]";
+	}
+
+    
+
 }

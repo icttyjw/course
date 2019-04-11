@@ -32,7 +32,7 @@ public class SchoolInfo implements Serializable{
     private String schoolName;
 
     //学校密钥对
-    private String pubKey;
+    private String schoolPubKey;
 
     //学校特殊属性:比如一本，二本那些，这个属性可能包含多个内容
     //private List<String> schoolPro = new ArrayList<>();
@@ -50,7 +50,7 @@ public class SchoolInfo implements Serializable{
     public SchoolInfo(int schoolId, String schoolName, String pubKey, String schoolPro){
         this.schoolId = schoolId;
         this.schoolName = schoolName;
-        this.pubKey = pubKey;
+        this.schoolPubKey = pubKey;
         this.schoolPro = schoolPro;
     }
     
@@ -58,7 +58,7 @@ public class SchoolInfo implements Serializable{
     	this.schoolId=school.getSchoolId();
     	this.schoolName=school.getSchoolName();
     	this.schoolPro=school.getSchoolPro();
-    	this.pubKey=school.getPubKey();
+    	this.schoolPubKey=school.getPubKey();
     }
    
 
@@ -81,9 +81,6 @@ public class SchoolInfo implements Serializable{
         return schoolName;
     }
 
-    public String getPubKey() {
-        return pubKey;
-    }
     /*
     public List<String> getSchoolPro() {
 
@@ -107,9 +104,6 @@ public class SchoolInfo implements Serializable{
         this.schoolName = schoolName;
     }
 
-    public void setPubKey(String pubKey) {
-        this.pubKey = pubKey;
-    }
 
    
 
@@ -118,8 +112,16 @@ public class SchoolInfo implements Serializable{
         return "SchoolInfo{" +
                 "schoolId=" + schoolId +
                 ", schoolName='" + schoolName + '\'' +
-                ", pubKey=" + pubKey +
+                ", pubKey=" + schoolPubKey +
                 ", schoolPro=" + schoolPro +
                 '}';
     }
+
+	public String getSchoolPubKey() {
+		return schoolPubKey;
+	}
+
+	public void setSchoolPubKey(String schoolPubKey) {
+		this.schoolPubKey = schoolPubKey;
+	}
 }

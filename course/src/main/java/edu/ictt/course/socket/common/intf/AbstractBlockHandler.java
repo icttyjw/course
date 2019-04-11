@@ -31,7 +31,7 @@ public abstract class AbstractBlockHandler<T extends BaseBody> implements Handle
 		T bsBody = null;
 		if (packet.getBody() != null) {
 			jsonStr = new String(packet.getBody(), Const.CHARSET);
-			bsBody = FastJsonUtil.toTBean(jsonStr, bodyClass());
+			bsBody = FastJsonUtil.toBean(jsonStr, bodyClass());
 			logger.info(jsonStr+bsBody.getClass());
 		}
 		return handler(packet, bsBody, channelContext);

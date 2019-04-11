@@ -57,6 +57,12 @@ public class ExcelTest {
 		 ExcelReader excelReader=new ExcelReader(inputStream, ExcelTypeEnum.XLSX, null, excelListener);
 		 excelReader.read(new Sheet(1,1,ImportInfo.class));
 	}
+	@Test
+	public void jsonread()throws FileNotFoundException{
+		 InputStream inputStream = new FileInputStream(new File("test.xlsx"));
+		 ExcelReader excelReader=new ExcelReader(inputStream, ExcelTypeEnum.XLSX, null, excelListener);
+		 excelReader.read(new Sheet(1,1,ImportInfo.class));
+	}
 	/*
 	public void savefirst(){
 		System.out.println(1);

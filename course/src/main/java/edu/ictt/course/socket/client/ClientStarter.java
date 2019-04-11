@@ -204,6 +204,7 @@ public class ClientStarter {
     	try {
 			String rn=new String(blockPacket.getBody(),Const.CHARSET);
 			RecordBody r=FastJsonUtil.toBean(rn, RecordBody.class);
+			System.out.println(rn);
 			System.out.println(r);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block

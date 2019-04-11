@@ -31,7 +31,7 @@ public class TeacherInfo implements Serializable{
     private String teacherTitle;
 
     //任课教师密钥对
-    private String pubKey;
+    private String teacherPubKey;
 
     public TeacherInfo(){}
 
@@ -39,13 +39,13 @@ public class TeacherInfo implements Serializable{
         this.teacherId = teacherId;
         this.teacherName = teacherName;
         this.teacherTitle = teacherTitle;
-        this.pubKey = pubKey;
+        this.teacherPubKey = pubKey;
     }
     public TeacherInfo(Teacher teacher){
     	this.teacherId=teacher.getTeacherId();
     	this.teacherName=teacher.getTeacherName();
     	this.teacherTitle=teacher.getTeacherTitle();
-    	this.pubKey=teacher.getPubKey();
+    	this.teacherPubKey=teacher.getPubKey();
     }
    
 
@@ -65,9 +65,7 @@ public class TeacherInfo implements Serializable{
         return teacherTitle;
     }
 
-    public String getPubKey() {
-        return pubKey;
-    }
+
 
     public void setTeacherId(int teacherId) {
         this.teacherId = teacherId;
@@ -81,9 +79,6 @@ public class TeacherInfo implements Serializable{
         this.teacherTitle = teacherTitle;
     }
 
-    public void setPubKey(String pubKey) {
-        this.pubKey = pubKey;
-    }
 
 
     @Override
@@ -92,7 +87,15 @@ public class TeacherInfo implements Serializable{
                 "teacherId=" + teacherId +
                 ", teacherName='" + teacherName + '\'' +
                 ", teacherTitle='" + teacherTitle + '\'' +
-                ", pubKey=" + pubKey +
+                ", pubKey=" + teacherPubKey +
                 '}';
     }
+
+	public String getTeacherPubKey() {
+		return teacherPubKey;
+	}
+
+	public void setTeacherPubKey(String teacherPubKey) {
+		this.teacherPubKey = teacherPubKey;
+	}
 }

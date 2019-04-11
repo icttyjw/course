@@ -11,6 +11,8 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.excel.read.context.AnalysisContext;
 import com.alibaba.excel.read.event.AnalysisEventListener;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 
 import edu.ictt.course.ApplicationContextProvider;
 import edu.ictt.course.bean.Course;
@@ -23,6 +25,7 @@ import edu.ictt.course.bean.SchoolInfo;
 import edu.ictt.course.bean.StudentInfo;
 import edu.ictt.course.bean.Teacher;
 import edu.ictt.course.bean.TeacherInfo;
+import edu.ictt.course.block.BlockBody;
 import edu.ictt.course.block.record.GradeInfo;
 import edu.ictt.course.block.record.GradeRecord;
 import edu.ictt.course.block.record.Record;
@@ -113,6 +116,7 @@ public class ExcelListener extends AnalysisEventListener {
     	String sc=FastJsonUtil.toJSONString(sinfo);
     	String fa=FastJsonUtil.toJSONString(finfo);
     	String courshash=SHA256.sha256(school.getSchoolName()+faculty.getFacultyName()+teacher.getTeacherName()+course.getCourseName());
+    	List<GradeRecord> lgr=new ArrayList<>();
     	for(Object o:cs){
     		/*
     		 * 每条记录需要读取学生信息
@@ -129,15 +133,17 @@ public class ExcelListener extends AnalysisEventListener {
     			
     			strsign=sc+fa+gi+r.getRecordTimeStamp()+tsign;
     			String fsign=ECDSAAlgorithm.sign(facprikey, strsign);
-    			r.setFalSign(fsign);
-    			System.out.println("start event");
-    			
+    			r.setFacultySign(fsign);
+    			System.out.println("record hash:" +SHA256.sha256(FastJsonUtil.toJSONString(r)));
+    			lgr.add(r);
     			ApplicationContextProvider.publishEvent(new SendRecordEvent(new RecordBody(r, courshash, count)));
     		}catch(UnsupportedEncodingException e){
     			e.printStackTrace();
     		}
+    		
     		//ApplicationContextProvider.publishEvent(new SendRecordEvent(new RecordBody(r, null, count)));
     	}
+    	
         /*
             datas.clear();
             解析结束销毁不用的资源
