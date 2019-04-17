@@ -21,6 +21,7 @@ import edu.ictt.course.service.TeacherService;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
 import javax.annotation.Resource;
@@ -32,6 +33,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.alibaba.excel.ExcelReader;
 import com.alibaba.excel.metadata.Sheet;
+import com.alibaba.excel.read.context.AnalysisContext;
+import com.alibaba.excel.read.event.AnalysisEventListener;
 import com.alibaba.excel.support.ExcelTypeEnum;
 
 @RunWith(SpringRunner.class)
@@ -55,7 +58,7 @@ public class ExcelTest {
 	public void read() throws FileNotFoundException{
 		 InputStream inputStream = new FileInputStream(new File("test.xlsx"));
 		 ExcelReader excelReader=new ExcelReader(inputStream, ExcelTypeEnum.XLSX, null, excelListener);
-		 excelReader.read(new Sheet(1,1,ImportInfo.class));
+		 excelReader.read(new Sheet(1,0,ImportInfo.class));
 	}
 	@Test
 	public void jsonread()throws FileNotFoundException{
@@ -80,4 +83,38 @@ public class ExcelTest {
 		courseService.save(course);
 		studentService.save(studentInfo);
 	}*/
+	 @Test
+	    public void testExcel2003NoModel() throws FileNotFoundException {
+	        InputStream inputStream = new FileInputStream(new File("test.xlsx"));
+	        try {
+	            // 解析每行结果在listener中处理
+	            ExcelListener listener = new ExcelListener();
+	            //ExcelReader excelReader = new ExcelReader(inputStream, ExcelTypeEnum.XLSX, ImportInfo.class, listener);
+	           ExcelReader excelReader = new ExcelReader(inputStream, ExcelTypeEnum.XLSX, null, new AnalysisEventListener() {
+	                @Override
+	                public void invoke(Object o, AnalysisContext analysisContext) {
+	                  System.out.println("当前sheet"+analysisContext.getCurrentSheet().getSheetNo()+ " 当前行：" + analysisContext.getCurrentRowNum()
+	                          + " data:" + o.toString());
+	                  ImportInfo ii=(ImportInfo)o;
+	                  //StudentInfo stu=new StudentInfo(ii.getStuid(), ii.getName(), "本科");
+	                  //studentService.save(stu);
+	                  //System.out.println(ii.getScore());
+	                }
+	         
+	                @Override
+	                public void doAfterAllAnalysed(AnalysisContext analysisContext) {
+	         
+	                }
+	              });
+	            excelReader.read(new Sheet(1, 0, ImportInfo.class));
+	        } catch (Exception e) {
+	        	 System.out.println(e);
+	        } finally {
+	            try {
+	                inputStream.close();
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	 }
 }

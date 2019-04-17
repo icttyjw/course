@@ -25,4 +25,6 @@ public interface Const {
     String CHARSET = "utf-8";
     
     String GROUP_SCHOOL="school_group";
+    
+    int record_count=50;
 }

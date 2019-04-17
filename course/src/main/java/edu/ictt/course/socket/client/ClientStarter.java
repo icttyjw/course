@@ -2,6 +2,10 @@ package edu.ictt.course.socket.client;
 
 import static edu.ictt.course.common.Const.GROUP_NAME;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashSet;
 import java.util.List;
@@ -27,14 +31,19 @@ import org.tio.core.ChannelContext;
 import org.tio.core.Node;
 import org.tio.utils.lock.SetWithLock;
 
+import com.alibaba.excel.ExcelReader;
+import com.alibaba.excel.metadata.Sheet;
+import com.alibaba.excel.support.ExcelTypeEnum;
 import com.google.common.collect.Maps;
 import com.sun.prism.impl.Disposer.Record;
 
+import edu.ictt.course.bean.ImportInfo;
 import edu.ictt.course.common.CommonUtil;
 import edu.ictt.course.common.Const;
 import edu.ictt.course.common.FastJsonUtil;
 import edu.ictt.course.core.event.NodesConnectedEvent;
 import edu.ictt.course.core.event.SendRecordEvent;
+import edu.ictt.course.core.excel.ExcelListener;
 import edu.ictt.course.socket.body.RecordBody;
 import edu.ictt.course.socket.packet.BlockPacket;
 import edu.ictt.course.socket.packet.PacketBuilder;
@@ -54,6 +63,8 @@ public class ClientStarter {
     private ClientGroupContext clientGroupContext;
     @Resource
     private PacketSender packetSender;
+    @Resource
+	 private ExcelListener excelListener;
     //@Resource
     //private RestTemplate restTemplate;
     //@Resource
@@ -126,7 +137,12 @@ public class ClientStarter {
        // BlockPacket nextBlockPacket = NextBlockPacketBuilder.build();
        // packetSender.sendGroup(nextBlockPacket);
     }
-
+    @Scheduled(initialDelay=2000,fixedRate = 30000000)
+    public void read() throws FileNotFoundException{
+		 InputStream inputStream = new FileInputStream(new File("test.xlsx"));
+		 ExcelReader excelReader=new ExcelReader(inputStream, ExcelTypeEnum.XLSX, null, excelListener);
+		 excelReader.read(new Sheet(1,0,ImportInfo.class));
+	}
     /**
      * client在此绑定多个服务器，多个服务器为一个group，将来发消息时发给一个group。
      * 此处连接的server的ip需要和服务器端保持一致，服务器删了，这边也要踢出Group

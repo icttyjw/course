@@ -29,6 +29,7 @@ import edu.ictt.course.block.BlockBody;
 import edu.ictt.course.block.record.GradeInfo;
 import edu.ictt.course.block.record.GradeRecord;
 import edu.ictt.course.block.record.Record;
+import edu.ictt.course.common.Const;
 import edu.ictt.course.common.FastJsonUtil;
 import edu.ictt.course.common.PairKey;
 import edu.ictt.course.common.SHA256;
@@ -73,7 +74,7 @@ public class ExcelListener extends AnalysisEventListener {
          * 需要校验读取的格式是否符合需要
          */
         List<Object> cs=new ArrayList<Object>();;
-        if(context.getCurrentRowNum()==1)
+        if(context.getCurrentRowNum()==0)
         {
         	cs=new ArrayList<Object>();
         	
@@ -117,10 +118,13 @@ public class ExcelListener extends AnalysisEventListener {
     	String fa=FastJsonUtil.toJSONString(finfo);
     	String courshash=SHA256.sha256(school.getSchoolName()+faculty.getFacultyName()+teacher.getTeacherName()+course.getCourseName());
     	List<GradeRecord> lgr=new ArrayList<>();
+    	int recordcount=0;
     	for(Object o:cs){
     		/*
     		 * 每条记录需要读取学生信息
     		 */
+    		//if(recordcount>Const.record_count)
+    			//courshash=courshash+"2";
     		ImportInfo ii=(ImportInfo) o;
     		StudentInfo str=studentService.queryStuById(ii.getStuid());
     		GradeInfo gi=new GradeInfo(courseInfo, tl, str, ii.getScore());
@@ -137,6 +141,7 @@ public class ExcelListener extends AnalysisEventListener {
     			System.out.println("record hash:" +SHA256.sha256(FastJsonUtil.toJSONString(r)));
     			lgr.add(r);
     			ApplicationContextProvider.publishEvent(new SendRecordEvent(new RecordBody(r, courshash, count)));
+    			recordcount++;
     		}catch(UnsupportedEncodingException e){
     			e.printStackTrace();
     		}
