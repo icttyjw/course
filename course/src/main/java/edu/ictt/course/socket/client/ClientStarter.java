@@ -94,7 +94,7 @@ public class ClientStarter {
      * 通过数据库获取其他服务器信息
      * 隔5分钟去获取一次
      */
-    @Scheduled(fixedRate = 300000)
+    //@Scheduled(fixedRate = 300000)
     public void fetchOtherServer() {
         String localIp = CommonUtil.getLocalIp();
         logger.info("本机IP：{}",localIp);
@@ -137,7 +137,7 @@ public class ClientStarter {
        // BlockPacket nextBlockPacket = NextBlockPacketBuilder.build();
        // packetSender.sendGroup(nextBlockPacket);
     }
-    @Scheduled(initialDelay=2000,fixedRate = 30000000)
+    //@Scheduled(initialDelay=2000,fixedRate = 30000000)
     public void read() throws FileNotFoundException{
 		 InputStream inputStream = new FileInputStream(new File("test.xlsx"));
 		 ExcelReader excelReader=new ExcelReader(inputStream, ExcelTypeEnum.XLSX, null, excelListener);
