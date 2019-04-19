@@ -21,4 +21,8 @@ public class CourseService {
 	public void save(Course courseInfo){
 		courseRepository.save(courseInfo);
 	}
+	
+	public Course findByName(String name){
+		return courseRepository.queryByName(name);
+	}
 }

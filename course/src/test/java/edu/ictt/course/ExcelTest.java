@@ -32,9 +32,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.alibaba.excel.ExcelReader;
+import com.alibaba.excel.context.AnalysisContext;
+import com.alibaba.excel.event.AnalysisEventListener;
 import com.alibaba.excel.metadata.Sheet;
-import com.alibaba.excel.read.context.AnalysisContext;
-import com.alibaba.excel.read.event.AnalysisEventListener;
 import com.alibaba.excel.support.ExcelTypeEnum;
 
 @RunWith(SpringRunner.class)
@@ -90,7 +90,7 @@ public class ExcelTest {
 	            // 解析每行结果在listener中处理
 	            ExcelListener listener = new ExcelListener();
 	            //ExcelReader excelReader = new ExcelReader(inputStream, ExcelTypeEnum.XLSX, ImportInfo.class, listener);
-	           ExcelReader excelReader = new ExcelReader(inputStream, ExcelTypeEnum.XLSX, null, new AnalysisEventListener() {
+	           ExcelReader excelReader = new ExcelReader(inputStream, ExcelTypeEnum.XLSX, null, new AnalysisEventListener<Object>() {
 	                @Override
 	                public void invoke(Object o, AnalysisContext analysisContext) {
 	                  System.out.println("当前sheet"+analysisContext.getCurrentSheet().getSheetNo()+ " 当前行：" + analysisContext.getCurrentRowNum()
