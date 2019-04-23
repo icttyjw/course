@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.file.Path;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -71,6 +72,7 @@ public class SendService {
     	String fa=FastJsonUtil.toJSONString(finfo);
     	String courshash=SHA256.sha256(school.getSchoolName()+faculty.getFacultyName()+teacher.getTeacherName()+course.getCourseName());
 		 try {
+			 	
 	        	File path = new File(ResourceUtils.getURL("classpath:").getPath());
 	        	 if(!path.getParentFile().exists()){
 	                 path.getParentFile().mkdirs();//创建父级文件路径
@@ -86,6 +88,55 @@ public class SendService {
 	    			upload.createNewFile();
 	    		}
 	    		InputStream inputStream = new FileInputStream(upload);
+	    		List<Object> datas = EasyExcelFactory.read(inputStream, new Sheet(1, 0));
+	    		int count=datas.size();
+	    		for(Object data:datas){
+	    			ImportInfo ii=(ImportInfo) data;
+	        		StudentInfo str=studentService.queryStuById(ii.getStuid());
+	        		GradeInfo gi=new GradeInfo(courseInfo, tl, str, ii.getScore());
+	        		String gr=FastJsonUtil.toJSONString(gi);
+	        		GradeRecord r=new GradeRecord(sinfo, finfo, gi, null, null, System.currentTimeMillis());
+	        		try{
+	        			String strsign=sc+fa+gi+r.getRecordTimeStamp();
+	        			String tsign=ECDSAAlgorithm.sign(teaprikey, strsign);
+	        			r.setTeacherSign(tsign);
+	        			
+	        			strsign=sc+fa+gi+r.getRecordTimeStamp()+tsign;
+	        			String fsign=ECDSAAlgorithm.sign(facprikey, strsign);
+	        			r.setFacultySign(fsign);
+	        			System.out.println("record hash:" +SHA256.sha256(FastJsonUtil.toJSONString(r)));
+	        			ApplicationContextProvider.publishEvent(new SendRecordEvent(new RecordBody(r, courshash, count)));
+	        		}catch(UnsupportedEncodingException e){
+	        			e.printStackTrace();
+	        		}
+	    		
+	    		}
+	            inputStream.close();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        } 
+	}
+	public void send(Path filename,String coursename){
+    	Course course=courseService.findByName(coursename);
+    	CourseInfo courseInfo=new CourseInfo(course);
+    	School school=schoolService.findById(course.getSchoolId());
+    	Faculty faculty=facultyService.findById(course.getFacultyId());
+    	Teacher teacher=teacherService.findById(course.getTeacherId());
+    	SchoolInfo sinfo=new SchoolInfo(school);
+    	FacultyInfo finfo=new FacultyInfo(faculty);
+    	TeacherInfo[] tl=new TeacherInfo[3];
+    	TeacherInfo tinfo=new TeacherInfo(teacher);
+    	tl[0]=tinfo;
+    	String teaprikey=teacher.getPriKey();
+    	//String teapubkey=teacher.getPubKey();
+    	String facprikey=faculty.getPriKey();
+    	//String facpubkey=faculty.getPubKey();
+    	String sc=FastJsonUtil.toJSONString(sinfo);
+    	String fa=FastJsonUtil.toJSONString(finfo);
+    	String courshash=SHA256.sha256(school.getSchoolName()+faculty.getFacultyName()+teacher.getTeacherName()+course.getCourseName());
+		 try {
+			 	File file=filename.toFile();
+	    		InputStream inputStream = new FileInputStream(file);
 	    		List<Object> datas = EasyExcelFactory.read(inputStream, new Sheet(1, 0));
 	    		int count=datas.size();
 	    		for(Object data:datas){

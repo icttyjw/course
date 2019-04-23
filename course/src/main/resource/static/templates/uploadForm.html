@@ -1,0 +1,32 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+	<div th:if="${message}">
+		<h2 th:text="${message}"></h2>
+	</div>
+
+	<div>
+		<form method="POST" enctype="multipart/form-data" action="/">
+			<table>
+				<tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
+				<tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+			</table>
+		</form>
+	</div>
+
+	<div>
+		<ul>
+			<li th:each="file : ${files}">
+				
+				<form action="/send" method="post"  enctype="multipart/form-data">
+				
+				<input th:value="${file}" th:text="${file}" type="hidden" name="file"/>
+				
+  Course name: <input type="text" name="fname"/><br></br>
+  <input type="submit" value="提交"/></form>
+			</li>
+		</ul>
+	</div>
+
+</body>
+</html>
