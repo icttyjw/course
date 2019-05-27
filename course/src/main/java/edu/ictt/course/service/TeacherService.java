@@ -15,6 +15,7 @@ public class TeacherService {
 	private TeacherRepository teacherRepository;
 	
 	public Teacher findById(int id){
+		System.out.println(id);
 		return teacherRepository.findOne(id);
 	}
 	public void save(Teacher teacher){

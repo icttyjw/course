@@ -5,10 +5,13 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
 
@@ -21,15 +24,19 @@ import edu.ictt.course.bean.CourseInfo;
 import edu.ictt.course.bean.Faculty;
 import edu.ictt.course.bean.FacultyInfo;
 import edu.ictt.course.bean.ImportInfo;
+import edu.ictt.course.bean.NewGradeInfo;
 import edu.ictt.course.bean.School;
 import edu.ictt.course.bean.SchoolInfo;
+import edu.ictt.course.bean.Student;
 import edu.ictt.course.bean.StudentInfo;
 import edu.ictt.course.bean.Teacher;
 import edu.ictt.course.bean.TeacherInfo;
 import edu.ictt.course.block.record.GradeInfo;
 import edu.ictt.course.block.record.GradeRecord;
+import edu.ictt.course.block.record.NewRecord;
 import edu.ictt.course.common.FastJsonUtil;
 import edu.ictt.course.common.SHA256;
+import edu.ictt.course.common.SignUtil;
 import edu.ictt.course.common.algorithm.ECDSAAlgorithm;
 import edu.ictt.course.core.controller.Message;
 import edu.ictt.course.core.event.SendRecordEvent;
@@ -52,6 +59,7 @@ public class SendService {
 	@Resource
 	private PacketSender packetSender;
 	
+	Logger logger=LoggerFactory.getLogger(getClass());
 	
 	public void send(String filename,String coursename){
     	Course course=courseService.findByName(coursename);
@@ -92,8 +100,9 @@ public class SendService {
 	    		int count=datas.size();
 	    		for(Object data:datas){
 	    			ImportInfo ii=(ImportInfo) data;
-	        		StudentInfo str=studentService.queryStuById(ii.getStuid());
-	        		GradeInfo gi=new GradeInfo(courseInfo, tl, str, ii.getScore());
+	        		Student str=studentService.queryStuById(ii.getStuid());
+	        		StudentInfo strinfo=new StudentInfo(str);
+	        		GradeInfo gi=new GradeInfo(courseInfo, tl, strinfo, ii.getScore());
 	        		String gr=FastJsonUtil.toJSONString(gi);
 	        		GradeRecord r=new GradeRecord(sinfo, finfo, gi, null, null, System.currentTimeMillis());
 	        		try{
@@ -140,9 +149,16 @@ public class SendService {
 	    		List<Object> datas = EasyExcelFactory.read(inputStream, new Sheet(1, 0));
 	    		int count=datas.size();
 	    		for(Object data:datas){
-	    			ImportInfo ii=(ImportInfo) data;
-	        		StudentInfo str=studentService.queryStuById(ii.getStuid());
-	        		GradeInfo gi=new GradeInfo(courseInfo, tl, str, ii.getScore());
+	    			logger.info(""+data.getClass());
+	    			logger.info(""+data);
+	    			ArrayList<String> li=(ArrayList<String>)data;
+	    			ImportInfo ii=new ImportInfo();
+	    			ii.setStuid(Integer.parseInt(li.get(0)));
+	    			ii.setName(li.get(1));
+	    			ii.setScore(Double.valueOf(li.get(2)));
+	        		Student str=studentService.queryStuById(ii.getStuid());
+	        		StudentInfo strinfo=new StudentInfo(str);
+	        		GradeInfo gi=new GradeInfo(courseInfo, tl, strinfo, ii.getScore());
 	        		String gr=FastJsonUtil.toJSONString(gi);
 	        		GradeRecord r=new GradeRecord(sinfo, finfo, gi, null, null, System.currentTimeMillis());
 	        		try{
@@ -165,4 +181,48 @@ public class SendService {
 	            e.printStackTrace();
 	        } 
 	}
+	public void sendNew(Path filename,String coursename){
+    	Course course=courseService.findByName(coursename);
+    	CourseInfo courseInfo=new CourseInfo(course);
+    	School school=schoolService.findById(course.getSchoolId());
+    	Faculty faculty=facultyService.findById(course.getFacultyId());
+    	Teacher teacher=teacherService.findById(course.getTeacherId());
+    	SchoolInfo sinfo=new SchoolInfo(school);
+    	FacultyInfo finfo=new FacultyInfo(faculty);
+    	TeacherInfo[] tl=new TeacherInfo[3];
+    	TeacherInfo tinfo=new TeacherInfo(teacher);
+    	tinfo.setFacultyInfo(finfo);
+    	tl[0]=tinfo;
+    	String teaprikey=teacher.getPriKey();
+    	//String teapubkey=teacher.getPubKey();
+    	String facprikey=faculty.getPriKey();
+    	//String facpubkey=faculty.getPubKey();
+    	String sc=FastJsonUtil.toJSONString(sinfo);
+    	String fa=FastJsonUtil.toJSONString(finfo);
+    	String courshash=SHA256.sha256(school.getSchoolName()+faculty.getFacultyName()+teacher.getTeacherName()+course.getCourseName());
+		 try {
+			 	File file=filename.toFile();
+	    		InputStream inputStream = new FileInputStream(file);
+	    		List<Object> datas = EasyExcelFactory.read(inputStream, new Sheet(1, 0));
+	    		int count=datas.size();
+	    		for(Object data:datas){
+	    			ImportInfo ii=(ImportInfo) data;
+	        		Student str=studentService.queryStuById(ii.getStuid());
+	        		NewGradeInfo newGradeInfo=new NewGradeInfo(sinfo, finfo.getFacultyId(), str.getMajorInfoId(), course.getCourseId(), teacher.getTeacherId(), 
+	        				str.getStudentId(), ii.getScore(), facprikey, teaprikey);
+	        		String gradesign=SignUtil.gradetsign(newGradeInfo, teaprikey);
+	        		newGradeInfo.setTeacherSign(gradesign);
+	        		NewRecord r=new NewRecord(1, newGradeInfo, null, null, System.currentTimeMillis(), null);
+	        		String recordsign=SignUtil.recordfsign(r, facprikey);
+	        		r.setSign(recordsign);
+	        			ApplicationContextProvider.publishEvent(new SendRecordEvent(new RecordBody(r, courshash, count)));
+	        
+	    		
+	    		}
+	            inputStream.close();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        } 
+	}
+	
 }

@@ -22,6 +22,7 @@ import edu.ictt.course.bean.FacultyInfo;
 import edu.ictt.course.bean.ImportInfo;
 import edu.ictt.course.bean.School;
 import edu.ictt.course.bean.SchoolInfo;
+import edu.ictt.course.bean.Student;
 import edu.ictt.course.bean.StudentInfo;
 import edu.ictt.course.bean.Teacher;
 import edu.ictt.course.bean.TeacherInfo;
@@ -126,8 +127,9 @@ public class ExcelListener extends AnalysisEventListener {
     		//if(recordcount>Const.record_count)
     			//courshash=courshash+"2";
     		ImportInfo ii=(ImportInfo) o;
-    		StudentInfo str=studentService.queryStuById(ii.getStuid());
-    		GradeInfo gi=new GradeInfo(courseInfo, tl, str, ii.getScore());
+    		Student str=studentService.queryStuById(ii.getStuid());
+    		StudentInfo stri=new StudentInfo(str);
+    		GradeInfo gi=new GradeInfo(courseInfo, tl, stri, ii.getScore());
     		String gr=FastJsonUtil.toJSONString(gi);
     		GradeRecord r=new GradeRecord(sinfo, finfo, gi, null, null, System.currentTimeMillis());
     		try{

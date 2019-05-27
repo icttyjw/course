@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import edu.ictt.course.bean.Student;
 import edu.ictt.course.bean.StudentInfo;
 import edu.ictt.course.repository.StudentRepository;
 
@@ -13,12 +14,12 @@ public class StudentService {
 	@Resource
 	private StudentRepository studentRepository;
 	
-	public StudentInfo queryStuById(int stuid){
-		StudentInfo stu=studentRepository.findOne(stuid);
+	public Student queryStuById(int stuid){
+		Student stu=studentRepository.findOne(stuid);
 		return stu;
 	}
 	
-	public void save(StudentInfo stu){
+	public void save(Student stu){
 		studentRepository.save(stu);
 	}
 	

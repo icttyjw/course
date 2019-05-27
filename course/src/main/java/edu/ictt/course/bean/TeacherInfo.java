@@ -28,26 +28,44 @@ public class TeacherInfo implements Serializable{
     private String teacherName;
 
     //任课教师职称
-    private String teacherTitle;
+    private String teacherPro;
 
     //任课教师密钥对
     private String teacherPubKey;
+    /**
+     * 任课教师性别
+     */
+    private char teacherSex;
+    /**
+     * 所属学院
+     */
+	private FacultyInfo facultyInfo;
 
     public TeacherInfo(){}
 
     public TeacherInfo(int teacherId, String teacherName, String teacherTitle, String pubKey){
         this.teacherId = teacherId;
         this.teacherName = teacherName;
-        this.teacherTitle = teacherTitle;
+        this.teacherPro = teacherTitle;
         this.teacherPubKey = pubKey;
     }
     public TeacherInfo(Teacher teacher){
     	this.teacherId=teacher.getTeacherId();
     	this.teacherName=teacher.getTeacherName();
-    	this.teacherTitle=teacher.getTeacherTitle();
+    	this.teacherPro=teacher.getTeacherPro();
+    	this.teacherSex=teacher.getTeacherSex();
     	this.teacherPubKey=teacher.getPubKey();
     }
-   
+    public TeacherInfo(FacultyInfo facultyInfo, int teacherId, String teacherName, char teacherSex, String teacherPro,
+			String teacherPubKey) {
+		super();
+		this.facultyInfo = facultyInfo;
+		this.teacherId = teacherId;
+		this.teacherName = teacherName;
+		this.teacherSex = teacherSex;
+		this.teacherPro = teacherPro;
+		this.teacherPubKey = teacherPubKey;
+	}
 
 	public int getTeacherId() {
 
@@ -60,36 +78,43 @@ public class TeacherInfo implements Serializable{
         return teacherName;
     }
 
-    public String getTeacherTitle() {
-
-        return teacherTitle;
-    }
 
 
 
-    public void setTeacherId(int teacherId) {
+
+    public String getTeacherPro() {
+		return teacherPro;
+	}
+
+	public FacultyInfo getFacultyInfo() {
+		return facultyInfo;
+	}
+
+	public void setTeacherPro(String teacherPro) {
+		this.teacherPro = teacherPro;
+	}
+
+	public void setFacultyInfo(FacultyInfo facultyInfo) {
+		this.facultyInfo = facultyInfo;
+	}
+
+	public void setTeacherId(int teacherId) {
         this.teacherId = teacherId;
     }
 
-    public void setTeacherName(String teacherName) {
+    public char getTeacherSex() {
+		return teacherSex;
+	}
+
+	public void setTeacherSex(char teacherSex) {
+		this.teacherSex = teacherSex;
+	}
+
+	public void setTeacherName(String teacherName) {
         this.teacherName = teacherName;
     }
 
-    public void setTeacherTitle(String teacherTitle) {
-        this.teacherTitle = teacherTitle;
-    }
 
-
-
-    @Override
-    public String toString() {
-        return "TeacherInfo{" +
-                "teacherId=" + teacherId +
-                ", teacherName='" + teacherName + '\'' +
-                ", teacherTitle='" + teacherTitle + '\'' +
-                ", pubKey=" + teacherPubKey +
-                '}';
-    }
 
 	public String getTeacherPubKey() {
 		return teacherPubKey;

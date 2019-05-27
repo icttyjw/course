@@ -2,6 +2,7 @@ package edu.ictt.course.socket.body;
 
 import edu.ictt.course.block.record.DegreeRecord;
 import edu.ictt.course.block.record.GradeRecord;
+import edu.ictt.course.block.record.NewRecord;
 import edu.ictt.course.block.record.Record;
 
 public class RecordBody extends BaseBody{
@@ -9,6 +10,8 @@ public class RecordBody extends BaseBody{
 	private GradeRecord gradeRecord;
 	
 	private DegreeRecord degreeRecord;
+	
+	private NewRecord record;
 	
 	private String indexhash;
 	//课程系列第一条记录发送时需要附带后续的记录数量
@@ -19,6 +22,13 @@ public class RecordBody extends BaseBody{
 	public RecordBody() {
 		super();
 	}
+	public RecordBody(NewRecord newRecord,String indexhash,int count){
+		super();
+		this.record=newRecord;
+		this.indexhash=indexhash;
+		this.count=count;
+	}
+	
 	public RecordBody(GradeRecord gradeRecord,String indexhash,int count){
 		super();
 		this.gradeRecord=gradeRecord;
@@ -67,6 +77,12 @@ public class RecordBody extends BaseBody{
 	}
 	public void setType(String type) {
 		this.type = type;
+	}
+	public NewRecord getRecord() {
+		return record;
+	}
+	public void setRecord(NewRecord record) {
+		this.record = record;
 	}
 	@Override
 	public String toString() {

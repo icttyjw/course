@@ -12,11 +12,19 @@ public class Teacher {
 	@Id
     private int teacherId;
 
+	private int facultyId;
+	
     //任课教师姓名
     private String teacherName;
 
     //任课教师职称
-    private String teacherTitle;
+    private String teacherPro;
+    
+    /**
+     * 任课教师性别
+     */
+    private char teacherSex;
+
 
     //任课教师密钥对
     private String pubKey;
@@ -26,7 +34,7 @@ public class Teacher {
     public Teacher(int teacherId,String teacherName,String teacherTitle,String pubKey,String priKey){
     	this.teacherId=teacherId;
     	this.teacherName=teacherName;
-    	this.teacherTitle=teacherTitle;
+    	this.teacherPro=teacherTitle;
     	this.pubKey=pubKey;
     	this.priKey=priKey;
     }
@@ -36,9 +44,6 @@ public class Teacher {
 	}
 	public String getTeacherName() {
 		return teacherName;
-	}
-	public String getTeacherTitle() {
-		return teacherTitle;
 	}
 	public String getPubKey() {
 		return pubKey;
@@ -52,14 +57,35 @@ public class Teacher {
 	public void setTeacherName(String teacherName) {
 		this.teacherName = teacherName;
 	}
-	public void setTeacherTitle(String teacherTitle) {
-		this.teacherTitle = teacherTitle;
-	}
 	public void setPubKey(String pubKey) {
 		this.pubKey = pubKey;
 	}
 	public void setPriKey(String priKey) {
 		this.priKey = priKey;
+	}
+
+	public int getFacultyId() {
+		return facultyId;
+	}
+
+	public String getTeacherPro() {
+		return teacherPro;
+	}
+
+	public char getTeacherSex() {
+		return teacherSex;
+	}
+
+	public void setFacultyId(int facultyId) {
+		this.facultyId = facultyId;
+	}
+
+	public void setTeacherPro(String teacherPro) {
+		this.teacherPro = teacherPro;
+	}
+
+	public void setTeacherSex(char teacherSex) {
+		this.teacherSex = teacherSex;
 	}
     
 }
